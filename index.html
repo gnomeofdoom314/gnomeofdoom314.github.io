@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width", initial-scale=1.0>
+    <title>Pentagria</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h1>Pentagria!</h1>
+    <section class="buttons">
+        <h3>Actions</h3>
+        <div class="actWrap">
+            <div>$ <span class="Mine">0</div>
+            <button onclick="IncCt('Mine',1)">Mine</button>
+            <div class="aCell">Click for points!</div>
+            <div></div>
+            <button onclick="Prospect()">Prospect</button>
+            <div class="aCell">Search for Spoils! Next expedition costs <span class="CostProspect">0</span> and has <span class="ChanceProspect">100</span>% success chance</div>
+            <div class="Miner">0</div>
+            <button onclick="BuyAThing('Miner')">Hire Miner</button>
+            <div class="aCell">Next Miner costs <span class="CostMiner">25</span> points and Mines every 3s</div>
+        </div>
+    </section>
+    <section class="spoils">
+        <h3>Potential Spoils</h3>
+        <div class="spoilList"></div>
+    </section>
+    <section class="inventory">
+        <div class="invWrap">
+            <div class="cell"><h3>Inventory</h3></div>
+            <div class="cell mRed">Red</div>
+            <div class="cell mYellow">Yellow</div>
+            <div class="cell mGreen">Green</div>
+            <div class="cell mBlue">Blue</div>
+            <div class="cell mPurple">Purple</div>
+            <div class="cell">Stone:</div>
+            <div class="cell mRed"><span class="RedStone">0</span> <button onclick="SellAThing('Red','Stone')">Sell 1:$1</button></div>
+            <div class="cell mYellow"><span class="YellowStone">0</span> <button onclick="SellAThing('Yellow','Stone')">Sell 1:$2</button></div>
+            <div class="cell mGreen"><span class="GreenStone">0</span> <button onclick="SellAThing('Green','Stone')">Sell 1:$3</button></div>
+            <div class="cell mBlue"><span class="BlueStone">0</span> <button onclick="SellAThing('Blue','Stone')">Sell 1:$4</button></div>
+            <div class="cell mPurple"><span class="PrupleStone">0</span> <button onclick="SellAThing('Purple','Stone')">Sell 1:$5</button></div>
+            <div class="cell">Metal:</div>
+            <div class="cell mRed"><span class="RedMetal">0</span> <button onclick="SellAThing('Red','Metal')">Sell 1:$2</button></div>
+            <div class="cell mYellow"><span class="YellowMetal">0</span> <button onclick="SellAThing('Yellow','Metal')">Sell 1:$4</button></div>
+            <div class="cell mGreen"><span class="GreenMetal">0</span> <button onclick="SellAThing('Green','Metal')">Sell 1:$6</button></div>
+            <div class="cell mBlue"><span class="BlueMetal">0</span> <button onclick="SellAThing('Blue','Metal')">Sell 1:$8</button></div>
+            <div class="cell mPurple"><span class="PrupleMetal">0</span> <button onclick="SellAThing('Purple','Metal')">Sell 1:$10</button></div>
+            <div class="cell">Gems:</div>
+            <div class="cell mRed"><span class="RedGems">0</span> <button onclick="SellAThing('Red','Gems')">Sell 1:$3</button></div>
+            <div class="cell mYellow"><span class="YellowGems">0</span> <button onclick="SellAThing('Yellow','Gems')">Sell 1:$6</button></div>
+            <div class="cell mGreen"><span class="GreenGems">0</span> <button onclick="SellAThing('Green','Gems')">Sell 1:$9</button></div>
+            <div class="cell mBlue"><span class="BlueGems">0</span> <button onclick="SellAThing('Blue','Gems')">Sell 1:$12</button></div>
+            <div class="cell mPurple"><span class="PrupleGems">0</span> <button onclick="SellAThing('Purple','Gems')">Sell 1:$15</button></div>
+        </div>
+         
+         
+         
+    </section>
+    <script type="module" src="./index.js"></script>
+</body>
+</html>

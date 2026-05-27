@@ -1,0 +1,75 @@
+body {
+    display: grid;
+    background-color: lightgray;
+    user-select: none;
+}
+
+/*"Red","Orange","Yellow","Chartreuse","Green","Emerald","Blue","Violet","Purple","Plum"*/
+.mRed {
+    color: darkred;
+    background-color: pink;
+}
+.mYellow {
+    color: darkorange;
+    background-color:blanchedalmond;
+}
+.mGreen {
+    color: darkGreen;
+    background-color: lightgreen;
+}
+.mBlue {
+    color: navy;
+    background-color: lightblue;
+}
+.mPurple {
+    color: indigo;
+    background-color: lavender;
+}
+
+section {
+    border: 3px solid black;
+    border-radius: 10px;
+    padding: 5px;
+    margin: 5px
+}
+
+.action{
+    width: 256px;
+    height: auto;
+    border: 3px solid black;
+    border-radius: 10px;
+    justify-items: center;
+    margin: 0px 5px 0px 5px;
+    padding: 4px;
+    text-align: center;
+}
+.action:hover{
+    opacity: .8;
+    cursor: pointer;
+}
+.action:active{
+    opacity: 1;
+    scale: .9
+}
+
+.actWrap{
+    display: grid;
+    grid-template-columns: repeat(2,100px) 400px;
+    gap: 10px;
+}
+.aCell{
+    border-radius: 5px;
+    background-color: #ccc;
+    padding: 5px;
+}
+
+.invWrap{
+    display: grid;
+    grid-template-columns: repeat(6,110px);
+    gap: 10px;
+}
+
+.cell{
+    border-radius: 5px;
+    padding: 5px;
+}
