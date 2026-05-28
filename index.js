@@ -53,22 +53,40 @@ function makeSpoilList() {
 setAllInners(".spoilList",makeSpoilList())
 
 function Prospect() {
+    //1. Check to see if all Spoils have been found
     if (Object.keys(Spoils).length < Object.keys(MasterSpoils).length) {
-        let chance = ProspectChanceNum/ProspectChanceDen
-        let roll = Math.random()
-        if (roll < chance) {
-            ProspectChanceDen = ProspectChanceDen*10
-            let j = Object.keys(Spoils).length+1
-            for (let i = Object.keys(Spoils).length; i < j; i++) {
-                let foo = Object.keys(MasterSpoils)[i]
-                Spoils[foo] = MasterSpoils[foo]
-                let bar = Object.keys(MasterWeights)[i]
-                SpoilWeights[bar] = MasterWeights[bar]
-            }
-            setAllInners(".spoilList",makeSpoilList())
-        } else {ProspectChanceNum += 1}
-        setAllInners(".ChanceProspect",Math.floor((ProspectChanceNum/ProspectChanceDen*10000))/100)
-    }
+
+        //2. Check to see if player has enough $ to prospect and then deduct Price if so
+        console.log("$:"+Ct["Mine"],"Cost:"+Cost["Prospect"])
+        if (Ct["Mine"] >= Cost["Prospect"]) {
+            Ct["Mine"] -= Cost["Prospect"]
+            setAllInners(".Mine",Ct["Mine"])
+
+            //3. Create chance of Prospect Success, and roll against that chance.
+            let chance = ProspectChanceNum/ProspectChanceDen
+            let roll = Math.random()
+            if (roll < chance) {
+
+                //4. Increase Prospect Denomenator by a factor of 10 (Right now, Numerator stays the same, kinda by design),
+                //and increase the cost to Prospect by 1 (essentially, the Prospect cost should = number of potential Spoils)
+                ProspectChanceDen = ProspectChanceDen*10
+                Cost["Prospect"] += 1
+                setAllInners(".CostProspect",Cost["Prospect"])
+
+                //5. Find the starting length of the current Spoils chart to use as a lookup in the MasterSpoils chart, then add the next Potential Spoil to the current chart
+                let j = Object.keys(Spoils).length+1
+                for (let i = Object.keys(Spoils).length; i < j; i++) {
+                    let foo = Object.keys(MasterSpoils)[i]
+                    Spoils[foo] = MasterSpoils[foo]
+                    let bar = Object.keys(MasterWeights)[i]
+                    SpoilWeights[bar] = MasterWeights[bar]
+                    consoleMsg(`Found ${Spoils[foo]["Color"]} ${Spoils[foo]["Mat"]}!`,"long")
+                }
+                setAllInners(".spoilList",makeSpoilList())
+            } else {ProspectChanceNum += 1} //If the prospect failed, the numerator goes up by 1
+            setAllInners(".ChanceProspect",Math.floor((ProspectChanceNum/ProspectChanceDen*10000))/100)
+        } else {consoleMsg("Not enough $!","short")}
+    } else {consoleMsg("No Spoils left to find!","short")}
 }
 
 function IncCt(thing,amt){
@@ -85,7 +103,7 @@ function IncCt(thing,amt){
                 setAllInners(`.${col}${mat}`,Ct[mat][col])
             }
         }
-    }
+    } else {consoleMsg("No Spoils to be found! Prospect First","long")}
 }
 
 function GetSpoils(items, weights) {
@@ -112,7 +130,7 @@ function BuyAThing(thing){
 
         Cost[thing] = Math.round(Cost[thing]*CostGrowthRateMiner)
         setAllInners(`.Cost${thing}`,Cost["Miner"])
-    }
+    } else {consoleMsg("Not enough $!","short")}
 }
 
 function setAllInners(thingToSet,mathToDo) {
@@ -127,12 +145,36 @@ function SellAThing(col,mat){
         setAllInners(`.${col}${mat}`,Ct[mat][col])
         Ct["Mine"] += Price[mat][col]
         setAllInners(".Mine",Ct["Mine"])
-    }
+    } else {consoleMsg("Not enough items!","short")}
 }
 
 setInterval (() => {
     if (Ct["Miner"] > 0) {IncCt("Mine",Ct["Miner"])}
 },3000)
+
+
+function consoleMsg (i,decay) {
+    const div = document.querySelector(".console")
+    const msg = document.createElement("span")
+    const checkFirstChild = div.firstChild
+    msg.innerHTML = i+"<br>"
+    div.insertBefore(msg,checkFirstChild)
+    //div.appendChild(msg)
+    let time = 0
+    if (decay == "long") {
+        msg.classList.add("seshUndefinedLong")
+        time = 4900
+    } else {
+        msg.classList.add("seshUndefinedShort")
+        time = 2900
+    }
+    timeout(msg,time)
+}
+const timeout = (div,time) => {
+    setTimeout(() => {
+        div.remove()
+    }, time)
+}
 
 window.Prospect = Prospect
 window.IncCt = IncCt
