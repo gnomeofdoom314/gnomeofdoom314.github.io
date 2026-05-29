@@ -139,12 +139,23 @@ function setAllInners(thingToSet,mathToDo) {
     })
 }
 
+let SellQty = 1
+function SetSellAmt(qty){
+    SellQty = qty
+    setAllInners(".SellingQty",SellQty)
+}
 function SellAThing(col,mat){
-    if (Ct[mat][col]>0) {
-        Ct[mat][col] -= 1
-        setAllInners(`.${col}${mat}`,Ct[mat][col])
-        Ct["Mine"] += Price[mat][col]
+    if (SellQty == "ALL") {
+        Ct["Mine"] += Price[mat][col]*Ct[mat][col]
         setAllInners(".Mine",Ct["Mine"])
+        Ct[mat][col] -= Ct[mat][col]
+        setAllInners(`.${col}${mat}`,Ct[mat][col])
+    } else if (Ct[mat][col]>=SellQty) {
+        Ct["Mine"] += Price[mat][col]*SellQty
+        setAllInners(".Mine",Ct["Mine"])
+        Ct[mat][col] -= SellQty
+        setAllInners(`.${col}${mat}`,Ct[mat][col])
+        
     } else {consoleMsg("Not enough items!","short")}
 }
 
@@ -179,4 +190,5 @@ const timeout = (div,time) => {
 window.Prospect = Prospect
 window.IncCt = IncCt
 window.BuyAThing = BuyAThing
+window.SetSellAmt = SetSellAmt
 window.SellAThing = SellAThing
