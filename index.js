@@ -1,3 +1,7 @@
+import {MasterSpoils} from "./spoils.js";
+import {MasterWeights} from "./spoils.js";
+let regionSelected = "RedRegion"
+
 const Ct = {
     Mine: 0,
     Miner: 0,
@@ -22,31 +26,20 @@ let CostGrowthRateMiner = 5
 let ProspectChanceNum = 1
 let ProspectChanceDen = 1
 
-const MasterSpoils = {
-    Item1: {Color:"Red",Mat:"Stone"},Item2: {Color:"Red",Mat:"Metal"},Item3: {Color:"Red",Mat:"Gems"},
-    Item4: {Color:"Yellow",Mat:"Stone"},Item5: {Color:"Yellow",Mat:"Metal"},Item6: {Color:"Yellow",Mat:"Gems"},
-    Item7: {Color:"Green",Mat:"Stone"},Item8: {Color:"Green",Mat:"Metal"},Item9: {Color:"Green",Mat:"Gems"},
-    Item10: {Color:"Blue",Mat:"Stone"},Item11: {Color:"Blue",Mat:"Metal"},Item12: {Color:"Blue",Mat:"Gems"},
-    Item13: {Color:"Purple",Mat:"Stone"},Item14: {Color:"Purple",Mat:"Metal"},Item15: {Color:"Purple",Mat:"Gems"},
-}
-const MasterWeights = [
-    15,10,5,14,9,4,13,8,3,12,7,2,11,6,1
-]
-
-const Spoils = {}
-const SpoilWeights = []
+const UserSpoils = {RedRegion: {Spoils: {}},YellowRegion: {Spoils: {}}}
+const UserSpoilWeights = {RedRegion: {Weights: [], chanceNum: 1, chanceDen: 1,},YellowRegion: {Weights: [], chanceNum: 1, chanceDen: 1,}}
 
 function makeSpoilList() {
     let list = ""
     
-    if (Object.keys(Spoils).length < 1) {list = "No Spoils to be found!"}
-    const totalWeight = SpoilWeights.reduce((sum, weight) => sum + weight, 0)
-    for (let i = 0; i < Object.keys(Spoils).length; i++) {
-        let foo = Object.keys(Spoils)[i]
-        let bar = SpoilWeights[i]
+    if (Object.keys(UserSpoils[regionSelected]["Spoils"]).length < 1) {list = "No Spoils to be found!"}
+    const totalWeight = (UserSpoilWeights[regionSelected]["Weights"]).reduce((sum, weight) => sum + weight, 0)
+    for (let i = 0; i < Object.keys(UserSpoils[regionSelected]["Spoils"]).length; i++) {
+        let foo = Object.keys(UserSpoils[regionSelected]["Spoils"])[i]
+        let bar = UserSpoilWeights[regionSelected]["Weights"][i]
         let barCent = Math.round((bar/totalWeight*100))
-        list = list+Spoils[foo]["Color"]+" "+Spoils[foo]["Mat"]+" "+barCent+"%"
-            if (i < Object.keys(Spoils).length-1) {list = list+"<br>"}
+        list = list+UserSpoils[regionSelected]["Spoils"][foo]["Color"]+" "+UserSpoils[regionSelected]["Spoils"][foo]["Mat"]+" "+barCent+"%"
+            if (i < Object.keys(UserSpoils[regionSelected]["Spoils"]).length-1) {list = list+"<br>"}
     }
     return list
 }
@@ -54,7 +47,7 @@ setAllInners(".spoilList",makeSpoilList())
 
 function Prospect() {
     //1. Check to see if all Spoils have been found
-    if (Object.keys(Spoils).length < Object.keys(MasterSpoils).length) {
+    if (Object.keys(UserSpoils[regionSelected]["Spoils"]).length < Object.keys(MasterSpoils[regionSelected]["Spoils"]).length) {
 
         //2. Check to see if player has enough $ to prospect and then deduct Price if so
         console.log("$:"+Ct["Mine"],"Cost:"+Cost["Prospect"])
@@ -63,47 +56,58 @@ function Prospect() {
             setAllInners(".Mine",Ct["Mine"])
 
             //3. Create chance of Prospect Success, and roll against that chance.
-            let chance = ProspectChanceNum/ProspectChanceDen
+            let chance = UserSpoilWeights[regionSelected]["chanceNum"]/UserSpoilWeights[regionSelected]["chanceDen"]
             let roll = Math.random()
             if (roll < chance) {
 
                 //4. Increase Prospect Denomenator by a factor of 10 (Right now, Numerator stays the same, kinda by design),
                 //and increase the cost to Prospect by 1 (essentially, the Prospect cost should = number of potential Spoils)
-                ProspectChanceDen = ProspectChanceDen*10
+                UserSpoilWeights[regionSelected]["chanceDen"] = UserSpoilWeights[regionSelected]["chanceDen"]*10
                 Cost["Prospect"] += 1
                 setAllInners(".CostProspect",Cost["Prospect"])
 
                 //5. Find the starting length of the current Spoils chart to use as a lookup in the MasterSpoils chart, then add the next Potential Spoil to the current chart
-                let j = Object.keys(Spoils).length+1
-                for (let i = Object.keys(Spoils).length; i < j; i++) {
-                    let foo = Object.keys(MasterSpoils)[i]
-                    Spoils[foo] = MasterSpoils[foo]
-                    let bar = Object.keys(MasterWeights)[i]
-                    SpoilWeights[bar] = MasterWeights[bar]
-                    consoleMsg(`Found ${Spoils[foo]["Color"]} ${Spoils[foo]["Mat"]}!`,"long")
+                let j = Object.keys(UserSpoils[regionSelected]["Spoils"]).length+1
+                for (let i = Object.keys(UserSpoils[regionSelected]["Spoils"]).length; i < j; i++) {
+                    let foo = Object.keys(MasterSpoils[regionSelected]["Spoils"])[i]
+                    console.log("foo: ",foo)
+                    UserSpoils[regionSelected]["Spoils"][foo] = MasterSpoils[regionSelected]["Spoils"][foo]
+                    let bar = Object.keys(MasterWeights[regionSelected]["Weights"])[i]
+                    console.log("bar: ",bar)
+                    UserSpoilWeights[regionSelected]["Weights"][bar] = MasterWeights[regionSelected]["Weights"][bar]
+                    consoleMsg(`Found ${UserSpoils[regionSelected]["Spoils"][foo]["Color"]} ${UserSpoils[regionSelected]["Spoils"][foo]["Mat"]}!`,"long")
                 }
                 setAllInners(".spoilList",makeSpoilList())
-            } else {ProspectChanceNum += 1} //If the prospect failed, the numerator goes up by 1
-            setAllInners(".ChanceProspect",Math.floor((ProspectChanceNum/ProspectChanceDen*10000))/100)
+            } else {UserSpoilWeights[regionSelected]["chanceNum"] += 1} //If the prospect failed, the numerator goes up by 1
+            setAllInners(".ChanceProspect",Math.floor((UserSpoilWeights[regionSelected]["chanceNum"]/UserSpoilWeights[regionSelected]["chanceDen"]*10000))/100)
         } else {consoleMsg("Not enough $!","short")}
     } else {consoleMsg("No Spoils left to find!","short")}
 }
 
 function IncCt(thing,amt){
-    if (Object.keys(Spoils).length > 0) {
+    if (Object.keys(UserSpoils[regionSelected]["Spoils"]).length > 0) {
         Ct[thing] += amt
         setAllInners(`.${thing}`,Ct[thing])
 
         if (thing=="Mine") {
             for (let i = 0; i < amt; i++) {
-                const IncSpoil = GetSpoils(Spoils,SpoilWeights)
-                let mat = Spoils[IncSpoil]["Mat"]
-                let col = Spoils[IncSpoil]["Color"]
+                const IncSpoil = GetSpoils(UserSpoils[regionSelected]["Spoils"],UserSpoilWeights[regionSelected]["Weights"])
+                let mat = UserSpoils[regionSelected]["Spoils"][IncSpoil]["Mat"]
+                let col = UserSpoils[regionSelected]["Spoils"][IncSpoil]["Color"]
                 Ct[mat][col] += 1
                 setAllInners(`.${col}${mat}`,Ct[mat][col])
             }
         }
     } else {consoleMsg("No Spoils to be found! Prospect First","long")}
+}
+
+document.getElementById('regionSelect').onchange = function() {
+    //alert(`You selected: ${this.value}`)
+    regionSelected = this.value
+    setAllInners(".currentRegion", this.value)
+    setAllInners(".spoilList",makeSpoilList())
+    setAllInners(".ChanceProspect",Math.floor((UserSpoilWeights[regionSelected]["chanceNum"]/UserSpoilWeights[regionSelected]["chanceDen"]*10000))/100)
+
 }
 
 function GetSpoils(items, weights) {
@@ -140,8 +144,8 @@ function setAllInners(thingToSet,mathToDo) {
 }
 
 let SellQty = 1
-function SetSellAmt(qty){
-    SellQty = qty
+document.getElementById('sellQtySelect').onchange = function() {
+    SellQty = this.value
     setAllInners(".SellingQty",SellQty)
 }
 function SellAThing(col,mat){
@@ -190,5 +194,4 @@ const timeout = (div,time) => {
 window.Prospect = Prospect
 window.IncCt = IncCt
 window.BuyAThing = BuyAThing
-window.SetSellAmt = SetSellAmt
 window.SellAThing = SellAThing

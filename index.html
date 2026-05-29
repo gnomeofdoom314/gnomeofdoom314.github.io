@@ -19,7 +19,7 @@
             <div class="aCell">Click for points!</div>
             <div></div>
             <button onclick="Prospect()">Prospect</button>
-            <div class="aCell">Search for Spoils! Next expedition costs <span class="CostProspect">0</span> and has <span class="ChanceProspect">100</span>% success chance</div>
+            <div class="aCell">Search for Spoils! Next expedition in <span class="currentRegion">RedRegion</span> costs <span class="CostProspect">0</span> and has <span class="ChanceProspect">100</span>% success chance</div>
             <div class="Miner">0</div>
             <button onclick="BuyAThing('Miner')">Hire Miner</button>
             <div class="aCell">Next Miner costs <span class="CostMiner">25</span> points and Mines every 3s</div>
@@ -27,16 +27,40 @@
     </section>
     <section class="spoils">
         <h3>Potential Spoils</h3>
-        <div class="spoilList"></div>
+        <div class="spoilsWrap">
+            <div class="sCell">Select a Region<br>
+                <select name="regionSelect" id="regionSelect">
+                    <option value="RedRegion">Red</option>
+                    <option value="YellowRegion">Yellow</option>
+                    <!--<option value="GreenRegion">Green</option>
+                    <option value="BlueRegion">Blue</option>
+                    <option value="PurpleRegion">Purple</option>-->
+                </select>
+            </div>
+            <div class="sCell">
+                <p>Current Region: <span class="currentRegion">RedRegion</span></p>
+                <div class="spoilList"></div>
+            </div>
+            
+        </div>
     </section>
     <section class="inventory">
+        <h3>Inventory</h3>
         <div class="invWrap">
-            <div class="cell"><h3>Inventory</h3></div>
-            <div class="cell mRed">Red</div>
-            <div class="cell mYellow">Yellow</div>
-            <div class="cell mGreen">Green</div>
-            <div class="cell mBlue">Blue</div>
-            <div class="cell mPurple">Purple</div>
+            <div class="cell">
+                <p>Qty to sell:<br>
+                <select name="sellQtySelect" id="sellQtySelect">
+                    <option value=1>1</option>
+                    <option value=5>5</option>
+                    <option value=10>10</option>
+                    <option value="ALL">ALL</option>
+                </select></p>
+            </div>
+            <div class="cell mRed"><h2><center>Red</center></h2></div>
+            <div class="cell mYellow"><h2><center>Yellow</center></h2></div>
+            <div class="cell mGreen"><h2><center>Green</center></h2></div>
+            <div class="cell mBlue"><h2><center>Blue</center></h2></div>
+            <div class="cell mPurple"><h2><center>Purple</center></h2></div>
             <div class="cell">Stone:</div>
             <div class="cell mRed"><span class="RedStone">0</span> <button onclick="SellAThing('Red','Stone')">Sell @ $1</button></div>
             <div class="cell mYellow"><span class="YellowStone">0</span> <button onclick="SellAThing('Yellow','Stone')">Sell @ $2</button></div>
@@ -55,10 +79,7 @@
             <div class="cell mGreen"><span class="GreenGems">0</span> <button onclick="SellAThing('Green','Gems')">Sell @ $9</button></div>
             <div class="cell mBlue"><span class="BlueGems">0</span> <button onclick="SellAThing('Blue','Gems')">Sell @ $12</button></div>
             <div class="cell mPurple"><span class="PrupleGems">0</span> <button onclick="SellAThing('Purple','Gems')">Sell @ $15</button></div>
-        </div>
-        <p><button onclick="SetSellAmt(1)">Sell 1</button><button onclick="SetSellAmt(10)">Sell 10</button><button onclick="SetSellAmt('ALL')">Sell ALL</button></p>
-        <p>Currently selling: <span class="SellingQty">1</span></p>
-         
+        </div>         
          
     </section>
     <script type="module" src="./index.js"></script>
